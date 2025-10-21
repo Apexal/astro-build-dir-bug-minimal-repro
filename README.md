@@ -14,6 +14,6 @@ was built to is moved to a new location before being run. This is a common use c
 
 3. Kill server and move the created `dist/` folder somewhere else `mkdir deployment && mv dist deployment`
 
-4. Run site again ``node ./deployment/dist/server/entry.mjs`
+4. Run site again `node ./deployment/dist/server/entry.mjs`
     - **Clear your browser cache so the image is not stored still**
     - The image will fail to render, and opening the path to it in a new tab will show `Internal Server Error`
