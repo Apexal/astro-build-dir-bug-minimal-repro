@@ -17,3 +17,23 @@ was built to is moved to a new location before being run. This is a common use c
 4. Run site again `node ./deployment/dist/server/entry.mjs`
     - **Clear your browser cache so the image is not stored still**
     - The image will fail to render, and opening the path to it in a new tab will show `Internal Server Error`
+
+### Temporary Fix for Images
+
+1. `pnpm patch astro`
+
+2. Modify `node_modules/.pnpm_patches/astro@5.14.7/dist/assets/endpoint/node.js`
+
+Change 
+```ts
+return await readFile(fileUrl);
+```
+
+to
+
+```
+// e.g. fileUrl.pathname.replace("/temp/dist", "/app")
+return await readFile(fileUrl.pathname.replace("/ORIGINAL BUILD OUTPUT DIR", "/FINAL BUILD OUTPUT DIR"));
+```
+
+3. `pnpm patch-commit 'node_modules/.pnpm_patches/astro@5.14.7'`
