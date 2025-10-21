@@ -1,43 +1,19 @@
-# Astro Starter Kit: Minimal
+# Astro Bug Minimal Reproduction
 
-```sh
-pnpm create astro@latest -- --template minimal
-```
+In the latest versions of Astro at the time of writing (5.14.x), images that are imported in Astro components and rendered via the `<Image>` component will fail to load **if** the folder that Astro site
+was built to is moved to a new location before being run. This is a common use case for developers, including my usecase of self-hosting on a VPS using Dokku.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### Steps to Reproduce
 
-## 🚀 Project Structure
+1. Install dependencies `pnpm install`
 
-Inside of your Astro project, you'll see the following folders and files:
+2. Build site `pnpm build`
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+3. Run site as docs say for production `node ./dist/server/entry.mjs`
+    - At this point you should see the 1 page with the "Hello World" image properly rendered at http://localhost:4321/
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+3. Kill server and move the created `dist/` folder somewhere else `mkdir deployment && mv dist deployment`
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+4. Run site again ``node ./deployment/dist/server/entry.mjs`
+    - **Clear your browser cache so the image is not stored still**
+    - The image will fail to render, and opening the path to it in a new tab will show `Internal Server Error`
